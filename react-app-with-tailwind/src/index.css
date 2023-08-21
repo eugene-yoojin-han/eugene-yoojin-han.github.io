@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "IzmirBold";
+  src: local("IzmirBold"), url("./fonts/Izmir/Fontspring-DEMO-izmir-bold.otf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "IzmirLight";
+  src: local("IzmirLight"), url("./fonts/Izmir/Fontspring-DEMO-izmir-light.otf") format("truetype");
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: "IzmirMed";
+  src: local("IzmirMed"), url("./fonts/Izmir/Fontspring-DEMO-izmir-medium.otf") format("truetype");
+  font-weight: medium;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -14,4 +32,36 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 500px;
+  background: linear-gradient(180deg, #05f, #09f);
+} */
+
+/* .container {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  place-content: center;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+} */
+
+.item {
+  width: 56%;
+  overflow: visible;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
