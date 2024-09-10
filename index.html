@@ -2,20 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<style>
-  body {
-    padding: 100px;
-    width: 1000px;
-    margin: auto;
-    text-align: left;
-    font-weight: 300;
-    font-family: 'Open Sans', sans-serif;
-    color: #121212;
-  }
-  h1, h2, h3, h4 {
-    font-family: 'Source Sans Pro', sans-serif;
-  }
-</style>
-		<title>CS 184/284A Rasterizer</title>
+			body {
+				padding: 100px;
+				width: 1000px;
+				margin: auto;
+				text-align: left;
+				font-weight: 300;
+				font-family: 'Open Sans', sans-serif;
+				color: #121212;
+			}
+			h1, h2, h3, h4 {
+				font-family: 'Source Sans Pro', sans-serif;
+			}
+		</style>
+		<title>CS 180 Project 1</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<link
 			href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro"
@@ -24,375 +24,161 @@
 
 	<body>
 
-		<h1 align="middle">CS 184/284A: Computer Graphics and Imaging, Spring
-			2024</h1>
-		<h1 align="middle">Homework 1: Rasterizer</h1>
+		<h1 align="middle">CS 180 Fall 2024</h1>
+		<h1 align="middle">Project 1: Colorizing the Prokudin-Gorskii photo
+			collection</h1>
 		<h2 align="middle">Eugene Han</h2>
+		<h2 align="middle">SID: 3036560489</h2>
 
 		<br><br>
 
 		<div>
 
 			<h2 align="middle">Overview</h2>
-			<p>For this project, I was able to create a rasterization program that
-				renders SVG files and applies PNG textures. This program features
-				several techniques learned in class, such as supersampling, hierarchical
-				transforms, and texture mapping. The biggest takeaway from this project
-				was that I was able to learn the code-implementation of such concepts,
-				providing me with a little glimpse of the concepts' industrial
-				application. Although it was difficult to understand the overall
-				codebase as well as implementing some techniques, I really enjoyed
-				working on the project.</p>
+			<p>This project aims to align and merge three separate color channels (red, green, blue) from historical Prokudin-Gorskii glass plate negatives 
+				into a single RGB image. For small images, we use a single-scale alignment method by exhaustively searching over a small range of pixel displacements, 
+				optimizing alignment with metrics like SSD or NCC. For large images, a multiscale image pyramid is built to efficiently perform alignment at progressively finer resolutions, 
+				allowing us to handle large displacements while reducing computational cost.</p>
 
-			<h2 align="middle">Section I: Rasterization</h2>
+			<h2 align="middle">Single-Scale Implementation on Low-Res Images</h2>
 
-			<h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
-
-			<p>To rasterize single-color triangles, I focused on checking if the
-				sampled point lies inside or outside of a triangle.
-				Therefore, in the function RasterizerImp::rasterize_triangle(), I first
-				converted the inputted x and y values into coordinates in a 3D vector
-				space.
-				I also initialized normal vectors corresponding to each vector formed by
-				the coordinates.
-				Here, since I cannot assume the triangle winding order always has the
-				same direction, I determined the winding order by checking whether the
-				cross product of two vectors (created with the coordinates) obeys the
-				right-hand rule. <br> <br>
-				Then, I iterated through each point within the triangle (formed by the
-				three coordinates) to check if the point lies inside or outside of the
-				triangle.
-				This checking process, or the line test method, is implemented by
-				calculating whether the dot product of the normal vector and the point
-				vector is greater than or equal to zero.
-				If it's greater than zero, then it means the point lies inside the
-				triangle. If it's equal to zero, then it means the point lies on the
-				edge of the triangle.
-				After checking this, I filled the point with the corresponding color.
-				<br> <br>
-				Since I'm only checking points between the minimum x and y values and
-				the maximum x and y values among the coordinates, my algorithm is
-				basically equivalent to checking each sample within the bounding box of
-				the triangle.
+			<p>In single-scale alignment, an exhaustive search is conducted over a small range of possible displacements (e.g., ±15 pixels) for each image channel, 
+				using Normalized Cross-Correlation (NCC) to evaluate the quality of the alignment. 
+				The design choice of using single-scale alignment for small images stems from the need for simplicity and efficiency, 
+				as the search space is manageable. By shifting the image across the search range and computing the metric at each position, 
+				the alignment is refined to the best displacement that minimizes SSD or maximizes NCC.
+				Reason for Design: Single-scale alignment is easy to implement and works well for small images where large displacements are unlikely. 
+				The metrics provide an accurate comparison of pixel intensity similarities across channels.
 			</p>
 
 			<div align="middle">
 				<table style="width=100%">
 					<tr>
 						<td>
-							<img src="images/image1.png" align="middle" width="400px" />
-							<figcaption align="middle">We can see from the pixel inspector
-								<br>that there's aliasing happening.</figcaption>
+							<img src="proj1-images/cathedral_naive.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">No alignment method applied.</figcaption>
 						</td>
 						<td>
-							<img src="images/image2.png" align="middle" width="400px" />
-							<figcaption align="middle">Colored dragon.</figcaption>
+							<img src="proj1-images/cathedral.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Normalized
+								Cross-Correlation.<br> Green channel aligned with displacement: (5, 2)
+								<br> Red channel aligned with displacement: (12, 3)</figcaption>
 						</td>
 					</tr>
 					<br>
 					<tr>
 						<td>
-							<img src="images/image3.png" align="middle" width="400px" />
-							<figcaption align="middle">Colored cube.</figcaption>
+							<img src="proj1-images/monastery_naive.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">No alignment method applied.</figcaption>
 						</td>
 						<td>
-							<img src="images/image4.png" align="middle" width="400px" />
-							<figcaption align="middle">Can rasterize files with <br> any
-								triangle winding order!</figcaption>
+							<img src="proj1-images/monastery.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Normalized
+								Cross-Correlation.<br> Green channel aligned with displacement: (-3, 2)
+								<br> Red channel aligned with displacement: (3, 2)</figcaption>
 						</td>
 					</tr>
-				</table>
-			</div>
+					<tr></tr>
+					<td>
+						<img src="proj1-images/tobolsk_pyramid.png" align="middle"
+							width="400px" />
+						<figcaption align="middle">No alignment method applied.</figcaption>
+					</td>
+					<td>
+						<img src="proj1-images/tobolsk.png" align="middle" width="400px" />
+						<figcaption align="middle">Aligned with Normalized
+							Cross-Correlation. <br> Green channel aligned with displacement: (3, 3)
+							<br> Red channel aligned with displacement: (6, 3)</figcaption>
+					</td>
+				</tr>
+			</table>
+			<h2 align="middle">Multiscale Pyramid Alignment on Large Images</h2>
 
-			<h3 align="middle">Part 2: Antialiasing triangles</h3>
-
-			<p> As shown above, the rasterization method from part 1 causes aliasing
-				since it conducts a strict test to check whether a single point is
-				EITHER inside or outside the triangle.
-				In order to avoid aliasing, I'll use a different approach called
-				supersampling. Supersampling is useful because I can basically average
-				the pixel's color by its portion inside the triangle.
-				By doing so, I can be more flexible with the line test method,
-				eventually giving the illusion of smoothing out the edges and
-				antialiasing the triangles.
-				<br> <br>
-				I was basically using the same rasterization pipeline as before but made
-				some modifications to implement supersampling. I first treated the
-				samples as pixels by increasing the dimension of the sample buffer array
-				from (width * height) to (width * height * sample_rate).
-				Then, when I'm iterating through each point within the triangle, I also
-				iterated through the samples within the pixel, and colored each sample
-				as if it is a pixel. To display the supersampled triangles, I also
-				resized the dimension of the frame buffer array by the same amount.
-				When each sample is colored, I added the colors of these samples within
-				a sample, and then I averaged the R, G, and B of the color out by the
-				sample rate. Then I filled the pixel with this averaged value to
-				complete rasterizing the point. I repeated this point rasterization
-				process
-				for all points within the triangle. As a result, this algorithm was able
-				to antialias the triangles.
-				<br> <br>
-				The examples below show how the pixels are colored at the very left
-				corner of the red triangle in the center.
+			<p>For larger images, multiscale pyramid alignment is used to address the computational expense of searching over large displacement ranges. 
+				The image is downsampled to form a pyramid of progressively smaller resolutions. Alignment is performed at the coarsest level, 
+				and the result is used as an initial guess for finer levels. This method reduces the search space significantly by allowing coarse alignment at lower resolutions and refinement at higher resolutions.
+				Reason for Design: Multiscale alignment allows efficient handling of large images by reducing the search space and improving computational performance. 
+				The pyramid approach captures large displacements at coarse levels and refines them at finer levels, ensuring precise alignment without exhaustive searching at full resolution.
 			</p>
 
 			<div align="middle">
 				<table style="width=100%">
 					<tr>
 						<td>
-							<img src="images/image5.png" align="middle" width="400px" />
-							<figcaption align="middle">1 sample per pixel. <br> Each pixel is
-								colored as a whole. </figcaption>
+							<img src="proj1-images/church_pyramid.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (25, 4)
+								<br> Red channel aligned with displacement: (58, -4)</figcaption>
 						</td>
 						<td>
-							<img src="images/image6.png" align="middle" width="400px" />
-							<figcaption align="middle">4 sample per pixel. <br> Each pixel is
-								divided up into 4 samples, <br> and the color is based on the
-								average. </figcaption>
+							<img src="proj1-images/emir_pyramid.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (49, 24)
+								<br> Red channel aligned with displacement: (104, 56)</figcaption>
 						</td>
 					</tr>
 					<br>
 					<tr>
 						<td>
-							<img src="images/image7.png" align="middle" width="400px" />
-							<figcaption align="middle">9 sample per pixel. <br> Each pixel is
-								divided up into 9 samples, <br> and the color is based on the
-								average.</figcaption>
+							<img src="proj1-images/harvesters_pyramid.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (60, 17)
+								<br> Red channel aligned with displacement: (124, 13)</figcaption>
 						</td>
 						<td>
-							<img src="images/image8.png" align="middle" width="400px" />
-							<figcaption align="middle">16 sample per pixel. <br> Each pixel is
-								divided up into 16 samples, <br> and the color is based on the
-								average.</figcaption>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-			<h3 align="middle">Part 3: Transforms</h3>
-
-			<p> In this part, I implemented some transformation techniques to portray
-				a kung-fu master demonstrating flying kick.
-				I included a lot of rotations as well as translations for every single
-				body part: arms, legs, head, and torso. I also changed the color to add
-				a difference from the regular stickman.
-				I tried to make the model look as dynamic as possible by transforming
-				the arms as well as the head as well.
-			</p>
-
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
-						<td>
-							<img src="images/image9.png" align="middle" width="400px" />
-							<figcaption align="middle">Regular stickman with the assertive
-								T-pose.</figcaption>
-						</td>
-						<td>
-							<img src="images/image10.png" align="middle" width="400px" />
-							<figcaption align="middle">Kung-fu master demonstrating flying
-								kick.</figcaption>
+							<img src="proj1-images/icon_pyramid.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (41, 17)
+								<br> Red channel aligned with displacement: (89, 23)</figcaption>
 						</td>
 					</tr>
-
-				</table>
-			</div>
-
-			<h2 align="middle">Section II: Sampling</h2>
-
-			<h3 align="middle">Part 4: Barycentric coordinates</h3>
-
-			<p> Barycentric coordinates are a way of representing points within a
-				geometric shape using a set of weights assigned to each vertex.
-				When we talk about barycentric coordinates we typically think about
-				triangles as the geomtric shape.
-				<br> <br>
-				As one may see from the image below, each coordinate's color is defined
-				relative to each corner.
-				The color is blended over the geometric shape because of its weights
-				determined by the coordinates' relative distance from each vertex.
-				The barycentric coordinate system also allows to determine whether a
-				point is within the geometric shape or not, which is why I just used the
-				algorithm
-				from supersampling as the basis when implementing barycentric coordinate
-				systems. I created a 3x3 matrix to use it as the weight matrix for each
-				coordinate.
-				The dimension of this matrix will vary depending on how many vertices
-				and colors are being inputted; in the function
-				RasterizerImp::rasterize_interpolated_color_triangle(),
-				there are only three coordinates and colors being inputted, which is why
-				the matrix is 3x3.
-			</p>
-
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
+					<tr></tr>
+					<td>
+						<img src="proj1-images/lady_pyramid.png" align="middle"
+							width="400px" />
+						<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (55, 9)
+							<br> Red channel aligned with displacement: (117, 11)</figcaption>
+					</td>
+					<td>
+						<img src="proj1-images/melons_pyramid.png" align="middle" width="400px" />
+						<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (82, 11)
+							<br> Red channel aligned with displacement: (169, 11)</figcaption>
+					</td>
+					<tr></tr>
 						<td>
-							<img src="images/image12.png" align="middle" width="500px" />
-							<figcaption align="middle">A triangle with demonstration of
-								barycentric coordinates. <br> (Image downloaded from Wikimedia
-								Commons <br>
-								https://commons.wikimedia.org/wiki/File:Barycentric_RGB.svg)
-							</figcaption>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
-						<td>
-							<img src="images/image11.png" align="middle" width="400px" />
-							<figcaption align="middle">Barycentric coordinates visualized as a
-								circle.</figcaption>
-						</td>
-					</tr>
-				</table>
-			</div>
-
-			<h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
-
-			<p> Pixel sampling is a technique used in texture mapping, where the color
-				of a point is determined by the colors of nearby pixels in a texture
-				image.
-				It involves determining which pixels from the texture image correspond
-				to the coordinates of the point that will be rendered. There are namely
-				two methods for pixel sampling.
-				Nearest neighbor sampling basically uses the color of the nearest pixel
-				from the texture coordinates as the sampled color. Bilinear filtering,
-				on the other hand,
-				takes the colors of the four nearest pixels into account, and it
-				calculates the weighted average to find the final color.
-				<br> <br>
-				I implemented these sampling methods by applying several modifications
-				to the supersampling algorithm. Everything is the same as the
-				supersampling algorithm, but except
-				I created new vectors called u and v for the texture space, as well as a
-				variable for the pixel sampling methods. Then in texture.cpp, I
-				implemented the nearest neighbor sampling method
-				as well as the bilinear filtering method by sampling the pixels with x-y
-				coordinates using the inputted u-v coordinates from sample_nearest() and
-				sample_bilinear() functions.
-			</p>
-
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
-						<td>
-							<img src="images/image13.png" align="middle" width="400px" />
-							<figcaption align="middle">1 sample per pixel. <br> Nearest
-								sampling. </figcaption>
+							<img src="proj1-images/onion_pyramid.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (51, 26)
+								<br> Red channel aligned with displacement: (108, 36)</figcaption>
 						</td>
 						<td>
-							<img src="images/image14.png" align="middle" width="400px" />
-							<figcaption align="middle">16 sample per pixel. <br> Nearest
-								sampling. </figcaption>
+							<img src="proj1-images/sculpture_pyramid.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (33, -11)
+								<br> Red channel aligned with displacement: (140, -27)</figcaption>
 						</td>
 					</tr>
 					<br>
 					<tr>
 						<td>
-							<img src="images/image15.png" align="middle" width="400px" />
-							<figcaption align="middle">1 sample per pixel. <br> Bilinear
-								sampling.</figcaption>
+							<img src="proj1-images/selfportrait_pyramid.png" align="middle"
+								width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (79, 29)
+								<br> Red channel aligned with displacement: (169, 35)</figcaption>
 						</td>
 						<td>
-							<img src="images/image16.png" align="middle" width="400px" />
-							<figcaption align="middle">16 sample per pixel. <br> Bilinear
-								sampling.</figcaption>
+							<img src="proj1-images/three_pyramid.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (53, 14)
+								<br> Red channel aligned with displacement: (112, 11)</figcaption>
+						</td>
+						<td></td>
+							<img src="proj1-images/train_pyramid.png" align="middle" width="400px" />
+							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (43, 6)
+								<br> Red channel aligned with displacement: (87, 32)</figcaption>
 						</td>
 					</tr>
-				</table>
-			</div>
+				</tr>
+			</table>
+		</div>
 
-			<p> As shown in the images above, averaging more samples to color a pixel
-				allows for a smoother, more accurate rendering of the image.
-				For the images with one sample rate, the white vertical line is
-				displayed smoother and more continuously with extended end for bilinear
-				filtering, while the line from the image with nearest neighbor sampling
-				seems disconnected.
-				For higher sample rates, the vertical white lines are more visible for
-				both nearest sampling and bilinear filtering images, but the line seems
-				more vivid for image sampled with bilinear filtering. As such, there
-				will be larger differences
-				if there are more dramatic change of color in pixels because the number
-				of samples used to average out and color a pixel is different for
-				nearest sampling and bilinear filtering.
-			</p>
-
-			<h3 align="middle">Part 6: "Level sampling" with mipmaps for texture
-				mapping</h3>
-			<p> Level sampling is a sampling method that also involves texture mapping
-				but takes distances of the object into account. Here, "level" refers to
-				different resolutions of a texture image.
-				This method basically involves determining the appropriate level of the
-				texture to sample from based on the distance of the rendered subject
-				from the camera.
-				<br> <br>
-				I implemented level sampling simply by using the same algorithm for
-				pixel sampling but implementing some functions where I can have access
-				to multiple texture levels in a mipmap.
-				I made the algorithm go through the necessary calculations to get the
-				level such that the appropriate mipmap level can be selected, and I also
-				made it such that it is able to get texels using the mipmap as well.
-				<br> <br>
-				Now, considering I can adjust my sampling technqiue by selecting pixel
-				sampling, level sampling, or the number of samples per pixel, I can
-				think about the tradeoffs of them between speed, memory usage, and
-				antialiasing power.
-				<br> <br>
-				Pixel sampling is computationally less intensive, and it requires less
-				memory. However, compared to other techniques, it may have less
-				antialiasing power.
-				Level sampling, on ther other hand, takes relatively more time to
-				compute as well as memory since it must consider storing multiple
-				mipmaps. However, because of its such deliberate analysis of the
-				texture, its antialiasing power is greater than that of pixel sampling.
-				However, one must consider that it might blur the image out due to too
-				much antialiasing.
-				Lastly, the efficiency of sampling by the number of samples per pixel
-				varies. If there are fewer number of samples per pixel, the
-				computational cost as well as the memory usage will decrease, but the
-				antialiasing power will decrease as well.
-				On the other hand, if the number of samples per pixel is greater, then
-				it will take more time and memory usage to compute, but the antialiasing
-				power will be greater as well.
-			</p>
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
-						<td>
-							<img src="images/image17.png" align="middle" width="400px" />
-							<figcaption align="middle">L_ZERO & P_NEAREST </figcaption>
-						</td>
-						<td>
-							<img src="images/image18.png" align="middle" width="400px" />
-							<figcaption align="middle">L_ZERO & P_LINEAR </figcaption>
-						</td>
-					</tr>
-					<br>
-					<tr>
-						<td>
-							<img src="images/image19.png" align="middle" width="400px" />
-							<figcaption align="middle">L_NEAREST & P_NEAREST</figcaption>
-						</td>
-						<td>
-							<img src="images/image20.png" align="middle" width="400px" />
-							<figcaption align="middle">L_NEAREST & P_LINEAR</figcaption>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<p> To test the implementation out, I chose a image with objects of
-				various distances from the camera such that could possibly showcase the
-				level sampling method the most.
-				As shown in the images above, there's a huge difference between the
-				level 0 sampled images and level nearest sampled images. The images
-				sampled using level nearest seem to be smoother.
-				We can see a little bit of aliasing happening for branches far away from
-				the camera for level 0 sampled images.
-			</p>
-
-		</body>
-	</html>
+	</body>
+</html>
