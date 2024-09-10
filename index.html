@@ -35,20 +35,17 @@
 		<div>
 
 			<h2 align="middle">Overview</h2>
-			<p>This project aims to align and merge three separate color channels (red, green, blue) from historical Prokudin-Gorskii glass plate negatives 
+			<p>This project aligns and merges three separate color channels—R,G, and B—from Prokudin-Gorskii glass plate negatives 
 				into a single RGB image. For small images, we use a single-scale alignment method by exhaustively searching over a small range of pixel displacements, 
-				optimizing alignment with metrics like SSD or NCC. For large images, a multiscale image pyramid is built to efficiently perform alignment at progressively finer resolutions, 
-				allowing us to handle large displacements while reducing computational cost.</p>
+				and this alignment will be optimized using Normalized Cross-Correlation. For larger images, a multiscale image pyramid is used to efficiently perform alignment at progressively finer resolutions, 
+				which will help us execute alignment algorithms with better computational cost on large displacements.</p>
 
 			<h2 align="middle">Single-Scale Implementation on Low-Res Images</h2>
 
-			<p>In single-scale alignment, an exhaustive search is conducted over a small range of possible displacements (e.g., ±15 pixels) for each image channel, 
-				using Normalized Cross-Correlation (NCC) to evaluate the quality of the alignment. 
-				The design choice of using single-scale alignment for small images stems from the need for simplicity and efficiency, 
+			<p>In single-scale alignment, we exhaustively serach over a small range of possible displacements. In this case, we use plus minus 15 pixels for each image channel
+				using Normalized Cross-Correlation (NCC) to evaluate the quality of the alignment. Using normalized cross correlation will ensure better simplicity and efficiency
 				as the search space is manageable. By shifting the image across the search range and computing the metric at each position, 
-				the alignment is refined to the best displacement that minimizes SSD or maximizes NCC.
-				Reason for Design: Single-scale alignment is easy to implement and works well for small images where large displacements are unlikely. 
-				The metrics provide an accurate comparison of pixel intensity similarities across channels.
+				the alignment is set to be the best displacement that maximizes normalized cross correlation.
 			</p>
 
 			<div align="middle">
@@ -96,11 +93,9 @@
 			</table>
 			<h2 align="middle">Multiscale Pyramid Alignment on Large Images</h2>
 
-			<p>For larger images, multiscale pyramid alignment is used to address the computational expense of searching over large displacement ranges. 
-				The image is downsampled to form a pyramid of progressively smaller resolutions. Alignment is performed at the coarsest level, 
-				and the result is used as an initial guess for finer levels. This method reduces the search space significantly by allowing coarse alignment at lower resolutions and refinement at higher resolutions.
-				Reason for Design: Multiscale alignment allows efficient handling of large images by reducing the search space and improving computational performance. 
-				The pyramid approach captures large displacements at coarse levels and refines them at finer levels, ensuring precise alignment without exhaustive searching at full resolution.
+			<p>For larger images, multiscale pyramid alignment is used to address the computational cost. Because of large displacements, it takes an unnecessarily long time
+				to align the channels if we use the exhaustive-search approach from single-scale alignment. Therefore, we first downsample the images to form a pyramid of progressively
+				smaller resolutions. Alignment is performed at the coarsest level, and the result is used as an initial guess for finer levels, significantly reducing search space and ensuring precise alignment without exhaustively searching all pixels at full resolut9ion.				Reason for Design: Multiscale alignment allows efficient handling of large images by reducing the search space and improving computational performance. 
 			</p>
 
 			<div align="middle">
