@@ -38,7 +38,7 @@
 			<p>This project aligns and merges three separate color channels—R,G, and B—from Prokudin-Gorskii glass plate negatives 
 				into a single RGB image. For small images, we use a single-scale alignment method by exhaustively searching over a small range of pixel displacements, 
 				and this alignment will be optimized using Normalized Cross-Correlation. For larger images, a multiscale image pyramid is used to efficiently perform alignment at progressively finer resolutions, 
-				which will help us execute alignment algorithms with better computational cost on large displacements.</p>
+				which will help us execute alignment algorithms with better computational cost on large displacements. We also crop the images first to remove 10% of the borders in order to avoid any distortions that often appear near the edges.</p>
 
 			<h2 align="middle">Single-Scale Implementation on Low-Res Images</h2>
 
