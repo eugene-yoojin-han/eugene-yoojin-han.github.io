@@ -14,6 +14,9 @@
 			h1, h2, h3, h4 {
 				font-family: 'Source Sans Pro', sans-serif;
 			}
+			.rotate {
+				transform: rotate(90deg);
+			}
 		</style>
 		<title>CS 180 Project 1</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -25,8 +28,7 @@
 	<body>
 
 		<h1 align="middle">CS 180 Fall 2024</h1>
-		<h1 align="middle">Project 1: Colorizing the Prokudin-Gorskii photo
-			collection</h1>
+		<h1 align="middle">Project 2: Fun with Filters and Frequencies!</h1>
 		<h2 align="middle">Eugene Han</h2>
 		<h2 align="middle">SID: 3036560489</h2>
 
@@ -34,147 +36,115 @@
 
 		<div>
 
-			<h2 align="middle">Overview</h2>
-			<p>This project aligns and merges three separate color channels—R,G, and B—from Prokudin-Gorskii glass plate negatives 
-				into a single RGB image. For small images, we use a single-scale alignment method by exhaustively searching over a small range of pixel displacements, 
-				and this alignment will be optimized using Normalized Cross-Correlation. For larger images, a multiscale image pyramid is used to efficiently perform alignment at progressively finer resolutions, 
-				which will help us execute alignment algorithms with better computational cost on large displacements. We also crop the images first to remove 10% of the borders in order to avoid any distortions that often appear near the edges.</p>
 
-			<h2 align="middle">Single-Scale Implementation on Low-Res Images</h2>
+			<h2 align="middle">Part 1: Fun with Filters</h2>
 
-			<p>In single-scale alignment, we exhaustively serach over a small range of possible displacements. In this case, we use plus minus 15 pixels for each image channel
-				using Normalized Cross-Correlation (NCC) to evaluate the quality of the alignment. Using normalized cross correlation will ensure better simplicity and efficiency
-				as the search space is manageable. By shifting the image across the search range and computing the metric at each position, 
-				the alignment is set to be the best displacement that maximizes normalized cross correlation.
-				There's an option to perform SSD instead of NNC, but the attached results are all outputted using NNC.
-			</p>
+			<h3 align="middle">1.1 Finite Difference Operator</h3>
+			<img src="proj2-images/finite_difference_operator.png" width="1000"/>
+			<p>The gradient magnitude represents the strength of edges in an image. TO compute it, convolve the image with finite difference operators D_x and D_y to get the derivatives in the x and y directions. The gradient magnitude is then calculated as magnitude = sqrt(D_x^2 + D_y^2) which highlights areas with strong intesnity changes like edges. </p>
 
-			<div align="middle">
+			<h3 align="middle">1.2 Derivative of Gaussian (DoG) Filter</h3>
+			<img src="proj2-images/derivative_of_gaussian_filter.png" width="1000"/>
+			<p>Applying the Gaussian filter reduces noise compared to usign only the fiinte difference operators. As it smooths out the noisy regions and prevers the real edges, it produces a cleaner edge detection without extra noise. Therefore, blurring a clear image with gaussian and reverting back results in the same image. </p>
+
+			<h2 align="middle">Part 2: Fun with Frequencies</h2>
+
+			<h3 align="middle">2.1 Image Sharpening</h3>
+
+			<img src="proj2-images/image_sharpening_1.png" width="1000"/>
+			<p></p>
+
+			<img src="proj2-images/image_sharpening_2.png" width="1000"/>
+			<p></p>
+
+			<h3 align="middle">2.2 Hybrid Images</h3>
+
+			<img src="proj2-images/hybrid.png" width="1000"/>
+			<p></p>
+			
+			<div align="middle"></div>
 				<table style="width=100%">
 					<tr>
 						<td>
-							<img src="proj1-images/cathedral_naive.png" align="middle"
+							<img src="proj2-images/low_freq.png" align="middle"
 								width="400px" />
-							<figcaption align="middle">No alignment method applied.</figcaption>
 						</td>
 						<td>
-							<img src="proj1-images/cathedral.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Normalized
-								Cross-Correlation.<br> Green channel aligned with displacement: (5, 2)
-								<br> Red channel aligned with displacement: (12, 3)</figcaption>
+							<img src="proj2-images/high_freq.png" align="middle" width="400px" />
 						</td>
 					</tr>
 					<br>
 					<tr>
 						<td>
-							<img src="proj1-images/monastery_naive.png" align="middle"
+							<img src="proj2-images/fft_derek.png" align="middle"
 								width="400px" />
-							<figcaption align="middle">No alignment method applied.</figcaption>
 						</td>
 						<td>
-							<img src="proj1-images/monastery.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Normalized
-								Cross-Correlation.<br> Green channel aligned with displacement: (-3, 2)
-								<br> Red channel aligned with displacement: (3, 2)</figcaption>
+							<img src="proj2-images/fft_nutmeg.png" align="middle" width="400px" />
 						</td>
 					</tr>
 					<tr></tr>
 					<td>
-						<img src="proj1-images/tobolsk_pyramid.png" align="middle"
+						<img src="proj2-images/fft_hybrid.png" align="middle"
 							width="400px" />
-						<figcaption align="middle">No alignment method applied.</figcaption>
 					</td>
-					<td>
-						<img src="proj1-images/tobolsk.png" align="middle" width="400px" />
-						<figcaption align="middle">Aligned with Normalized
-							Cross-Correlation. <br> Green channel aligned with displacement: (3, 3)
-							<br> Red channel aligned with displacement: (6, 3)</figcaption>
-					</td>
-				</tr>
-			</table>
-			<h2 align="middle">Multiscale Pyramid Alignment on Large Images</h2>
-
-			<p>For larger images, multiscale pyramid alignment is used to address the computational cost. Because of large displacements, it takes an unnecessarily long time
-				to align the channels if we use the exhaustive-search approach from single-scale alignment. Therefore, we first downsample the images to form a pyramid of progressively
-				smaller resolutions. Alignment is performed at the coarsest level, and the result is used as an initial guess for finer levels, significantly reducing search space and ensuring precise alignment without exhaustively searching all pixels at full resolut9ion.				Reason for Design: Multiscale alignment allows efficient handling of large images by reducing the search space and improving computational performance. 
-			</p>
-
-			<div align="middle">
-				<table style="width=100%">
-					<tr>
-						<td>
-							<img src="proj1-images/church_pyramid.png" align="middle"
-								width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (25, 4)
-								<br> Red channel aligned with displacement: (58, -4)</figcaption>
-						</td>
-						<td>
-							<img src="proj1-images/emir_pyramid.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (49, 24)
-								<br> Red channel aligned with displacement: (104, 56)</figcaption>
-						</td>
+					
 					</tr>
 					<br>
-					<tr>
-						<td>
-							<img src="proj1-images/harvesters_pyramid.png" align="middle"
-								width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (60, 17)
-								<br> Red channel aligned with displacement: (124, 13)</figcaption>
-						</td>
-						<td>
-							<img src="proj1-images/icon_pyramid.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (41, 17)
-								<br> Red channel aligned with displacement: (89, 23)</figcaption>
-						</td>
-					</tr>
-					<tr></tr>
-					<td>
-						<img src="proj1-images/lady_pyramid.png" align="middle"
-							width="400px" />
-						<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (55, 9)
-							<br> Red channel aligned with displacement: (117, 11)</figcaption>
-					</td>
-					<td>
-						<img src="proj1-images/melons_pyramid.png" align="middle" width="400px" />
-						<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (82, 11)
-							<br> Red channel aligned with displacement: (169, 11)</figcaption>
-					</td>
-					<tr></tr>
-						<td>
-							<img src="proj1-images/onion_pyramid.png" align="middle"
-								width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (51, 26)
-								<br> Red channel aligned with displacement: (108, 36)</figcaption>
-						</td>
-						<td>
-							<img src="proj1-images/sculpture_pyramid.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (33, -11)
-								<br> Red channel aligned with displacement: (140, -27)</figcaption>
-						</td>
-					</tr>
-					<br>
-					<tr>
-						<td>
-							<img src="proj1-images/selfportrait_pyramid.png" align="middle"
-								width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (79, 29)
-								<br> Red channel aligned with displacement: (169, 35)</figcaption>
-						</td>
-						<td>
-							<img src="proj1-images/three_pyramid.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (53, 14)
-								<br> Red channel aligned with displacement: (112, 11)</figcaption>
-						</td>
-						<td></td>
-							<img src="proj1-images/train_pyramid.png" align="middle" width="400px" />
-							<figcaption align="middle">Aligned with Image Pyramid.<br> Green channel aligned with displacement: (43, 6)
-								<br> Red channel aligned with displacement: (87, 32)</figcaption>
-						</td>
-					</tr>
 				</tr>
 			</table>
 		</div>
+		<img src="proj2-images/eugene_merged.png" width="1000" class="rotate"/>
+			<p></p>
+		<div align="middle"></div>
+				<table style="width=100%">
+					<tr>
+						<td>
+							<img src="proj2-images/eugene.png" align="middle"
+								width="400px" />
+						</td>
+						<td>
+							<img src="proj2-images/eugene.jpg" align="middle" width="400px" />
+						</td>
+					</tr>
+					<br>
+				</tr>
+			</table>
+		</div>
+		<img src="proj2-images/dog_toilet.png" width="1000"/>
+			<p></p>
+		<div align="middle"></div>
+				<table style="width=100%">
+					<tr>
+						<td>
+							<img src="proj2-images/dog.jpg" align="middle"
+								width="400px" />
+						</td>
+						<td>
+							<img src="proj2-images/toilet.jpg" align="middle" width="400px" />
+						</td>
+					</tr>
+					<br>
+				</tr>
+			</table>
+		</div>
+			<p></p>
+
+			<h3 align="middle">2.3 Gaussian and Laplacian Stacks</h3>
+			<img src="proj2-images/gaussian_laplacian.png" width="1000"/>
+			<p></p>
+			<img src="proj2-images/gaussian_laplacian_orange.png" width="1000"/>
+			<p></p>
+
+			<p></p>
+
+			<h3 align="middle">2.4 Multiresolution Blending</h3>
+			<img src="proj2-images/oraple.png" width="1000"/>
+			<p></p>
+
+			<p></p>
+
+			
 
 	</body>
 </html>
