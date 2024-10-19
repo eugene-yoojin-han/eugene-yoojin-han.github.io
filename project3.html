@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<style>
+			body {
+				padding: 100px;
+				width: 1000px;
+				margin: auto;
+				text-align: left;
+				font-weight: 300;
+				font-family: 'Open Sans', sans-serif;
+				color: #121212;
+			}
+			h1, h2, h3, h4 {
+				font-family: 'Source Sans Pro', sans-serif;
+			}
+			.rotate {
+				transform: rotate(90deg);
+			}
+		</style>
+		<title>CS 180 Project 3</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro"
+			rel="stylesheet">
+	</head>
+
+	<body>
+
+		<h1 align="middle">CS 180 Fall 2024</h1>
+		<h1 align="middle">Project 3: Face Morphing</h1>
+		<h2 align="middle">Eugene Han</h2>
+		<h2 align="middle">SID: 3036560489</h2>
+
+		<br><br>
+
+		<div>
+
+
+			<h2 align="middle">Part 1: Defining Correspondences</h2>
+			<p align="middle">Defining correspondence points for faces that are to be merged is a crucial process. This is because it is possible to compute the Delaunay triangulation and the mean of the correspondences to complete the merging process. I used the existing labeling tool from last year's student to select more than 70 correspondence points for two celebrity faces: George Clooney and Heath Ledger.</p>
+			<div align="middle"></div>
+			<img src="proj3-images/correspondence.png" align="middle"
+							width="800px" />
+							<figcaption align="middle">Correspondence points recorded in JSON</figcaption>
+				<table style="width=100%">
+					<br>
+					<tr>
+						<td>
+							<img src="proj3-images/heath.jpg" align="middle"
+								width="400px" />
+						</td>
+						<td>
+							<img src="proj3-images/george.jpg" align="middle" width="400px" />
+						</td>
+					</tr>
+				</tr>
+			</table>
+		</div>
+			<h2 align="middle">Part 2: Computing the Mid-way Face</h2>
+			<p align="middle">Before actually morphing the two faces, I computed the mid-way face between the two, which was computed by getting the average shape, warping both faces into that shape, and averagign the colors together. </p>
+			<p align="middle">To go into the details, I first collected the defined correspondence points for each image and computed the average of these points for the midway geometry. Then, I triangulated the face structures using Delaunay triangulation based on the average points. After this, I warped both faces to the midway geometry, and finally blended the warped faces to create the finaly midway face through cross-dissolving.</p>
+			<p align="middle">The following image is the midway face of the two faces.</p>
+			<img src="proj3-images/midway.png" width="800px"/>
+			<h2 align="middle">Part 3: The Morph Sequence</h2>
+			<p align="middle">The midway face is one face that appears during the morphing sequence. To get a full overview of the morphing sequence, I warped each face into an intermediate geometry, which is cacculated based on the current frame's progress in the morph. Then, the pixel values of both faces are blended together based on the progress, and all of these frames will be compiled into a single video that shows the smooth transition from one face to another. This creates a full morphing sequence as a whole.  </p>
+			<img src="proj3-images/morphingsequence.gif" width="800px"/>
+			<h2 align="middle">Part 4: The Mean Face of a Population</h2>
+			<p align="middle">I collected a dataset of faces from the FEL Database, where there is a set of neutral faces and another set of smiley faces. Using this dataset, I computed the average shape of the faces of the whole population, morphed each of the faces into the average shape, and computed the average face of the population through this process. I also attempted warping my face into the average geometry and vice versa. </p>
+			<table style="width=100%">
+				<tr>
+					<td>
+						<img src="proj3-images/neutral.png" align="middle"
+							width="400px" />
+							<figcaption align="middle">Neutral face average</figcaption>
+					</td>
+					<td>
+						<img src="proj3-images/smiley.png" align="middle" width="400px" />
+						<figcaption align="middle">Smiley face average</figcaption>
+					</td>
+				</tr>
+				<br>
+				<tr>
+					<td>
+						<img src="proj3-images/warptome.png" align="middle"
+							width="400px" />
+							<figcaption align="middle">Warping average face to my geometry</figcaption>
+					</td>
+					<td>
+						<img src="proj3-images/warptomean.png" align="middle" width="400px" />
+						<figcaption align="middle">Warping my face to average geometry</figcaption>
+					</td>
+				</tr>
+				<tr></tr>			
+				</tr>
+				<br>
+			</tr>
+		</table>
+			<h2 align="middle">Part 5: Caricatures: Extrapolating from the Mean</h2>
+			<img src="proj3-images/caricature.png" width="800px"/>
+			<figcaption align="middle">a = 1.5</figcaption>
+
+			<p align="middle">To get the caricature of my face, I exaggerated the features based on the difference between the original face and the mean face. I first got the correspondence points of the original face extrapolated beyond the mean face's points using a scalar factor of alpha. Then, I used Delaunay triangulation to warp the original face into the extrapolated points. </p>
+	</body>
+</html>
