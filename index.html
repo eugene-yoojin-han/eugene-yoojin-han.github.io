@@ -37,11 +37,18 @@
 		<div>
 
 			<h1 align="middle">Overview</h1>
-			<p align="middle">This project involves stiching images into a mosaic, both manually and automatically. I was able to capture my own source photographs, define correspondences between them, then warp and composite them for the manual approach. For the automatic approach, I detected corner features, extracted a feature descriptor for each point, matched those descriptors, and used a robust method RANSAC to compute the homography.</p>
+			<p align="middle">This project involves stiching images into a mosaic, both
+				manually and automatically. I was able to capture my own source photographs,
+				define correspondences between them, then warp and composite them for the
+				manual approach. For the automatic approach, I detected corner features,
+				extracted a feature descriptor for each point, matched those descriptors,
+				and used a robust method RANSAC to compute the homography.</p>
 
 			<h1 align="middle">Manual Approach (Part A)</h1>
 			<h2 align="middle">Shoot the Pictures</h2>
-			<p align="middle">I was able to capture pictures of the living room, bedroom, and a cafe for image warping and mosaicing. Two images are taken for each scene, with both images having significant overlaps for better outputs.</p>
+			<p align="middle">I was able to capture pictures of the living room, bedroom,
+				and a cafe for image warping and mosaicing. Two images are taken for each
+				scene, with both images having significant overlaps for better outputs.</p>
 			<table style="width=100%">
 				<tr>
 					<td>
@@ -73,7 +80,8 @@
 					</td>
 				</tr>
 			</table>
-			<p align="middle">I also took pictures for rectification. One is from my bedroom, and the other one is from the cafe.</p>
+			<p align="middle">I also took pictures for rectification. One is from my
+				bedroom, and the other one is from the cafe.</p>
 			<tr>
 				<td>
 					<img src="proj4a-images/image3.jpg" align="middle"
@@ -84,9 +92,12 @@
 				</td>
 			</tr>
 			<h2 align="middle">Recover Homographies</h2>
-			<p align="middle">The correspondence points are chosen using the tool provided from project 3. The points are defined based on objects that the two images share in common. Using the correspondence points, I recovered the homographies by using the following implementation.</p>
+			<p align="middle">The correspondence points are chosen using the tool
+				provided from project 3. The points are defined based on objects that the
+				two images share in common. Using the correspondence points, I recovered the
+				homographies by using the following implementation.</p>
 			<img src="proj4a-images/computeH.png" align="middle"
-						width="400px" />
+				width="400px" />
 			<h2 align="middle">Warp the Images</h2>
 			<p align="middle">I was able to warp the images for living room and cafe.</p>
 			<tr>
@@ -98,12 +109,15 @@
 					<img src="proj4a-images/final_cafe.png" align="middle" width="800px" />
 				</td>
 			</tr>
-			<p align="middle">I was also able to rectify some rectangular objects from the two scenes: one laptop and one painting. This was done by selecting the four corners of the rectangular objects as the corresopndence points using the user interface.</p>
+			<p align="middle">I was also able to rectify some rectangular objects from
+				the two scenes: one laptop and one painting. This was done by selecting the
+				four corners of the rectangular objects as the corresopndence points using
+				the user interface.</p>
 			<tr>
 				<td>
 					<img src="proj4a-images/image3.jpg" align="middle"
 						width="400px" />
-						
+
 				</td>
 				<td>
 					<img src="proj4a-images/image4.jpg" align="middle" width="400px" />
@@ -120,46 +134,58 @@
 				</td>
 			</tr>
 			<h2 align="middle">Blend Images into a Mosaic</h2>
-			<p align="middle">To further improve mosaicing, I can use a blending technique to further smoothen out the warping process. I used weight averaging to get rid of the noticeable artifacts, and I also incorporated Laplacian pyramid to make sure the two images are blended smoothly.</p>
+			<p align="middle">To further improve mosaicing, I can use a blending
+				technique to further smoothen out the warping process. I used weight
+				averaging to get rid of the noticeable artifacts, and I also incorporated
+				Laplacian pyramid to make sure the two images are blended smoothly.</p>
 			<tr>
 				<td>
 					<img src="proj4a-images/final_blend_bedroom.png" align="middle"
 						width="800px" />
 				</td>
 				<td>
-					<img src="proj4a-images/final_blend_cafe.png" align="middle" width="800px" />
+					<img src="proj4a-images/final_blend_cafe.png" align="middle"
+						width="800px" />
 				</td>
 				<td></td>
-					<img src="proj4a-images/final_blend_livingroom.png" align="middle" width="800px" />
-				</td>
-			</tr>
-			<h1 align="middle">Automatic Approach (Part B)</h1>
-			<h2 align="middle">Harris Point Detection & ANMS</h2>
-			<p align="middle">Zoom into the images to find where the points are detected. The tiny red points located in each of the image indicate the points detected. The red points are located mostly on the curtains of each image, just for your information.</p>
-			<img src="proj4a-images/anms1.png" align="middle"
-						width="800px" />
-			<img src="proj4a-images/anms2.png" align="middle"
-						width="800px" />
-			<h2 align="middle">Feature Descriptor Extraction</h2>
-			<img src="proj4a-images/feature1.png" align="middle"
-						width="800px" />
-			<img src="proj4a-images/feature2.png" align="middle"
-						width="800px" />
-			<h2 align="middle">Feature Matching</h2>
-			<p align="middle">The red lines indicate the points that are being matched among the two images. </p>
-			<img src="proj4a-images/featurematcheswithoutransac.png" align="middle"
-						width="800px" />
-			<h2 align="middle">RANSAC</h2>
-			<p align="middle">Using RANSAC, I was able to match more features between the two images.</p>
-			<img src="proj4a-images/ransac1.png" align="middle"
-						width="800px" />
-			<h2 align="middle">Automatic Stiching Images into a Mosaic</h2>
-			<p align="middle">The following are the results of automatically stitching the images using the method from the paper. </p>
-			<img src="proj4a-images/automatic1.png" align="middle"
-						width="800px" />
-			<img src="proj4a-images/automatic2.png" align="middle"
-						width="800px" />
-			<img src="proj4a-images/automatic3.png" align="middle"
-						width="800px" />
+				<img src="proj4a-images/final_blend_livingroom.png" align="middle"
+					width="800px" />
+			</td>
+		</tr>
+		<h1 align="middle">Automatic Approach (Part B)</h1>
+		<h2 align="middle">Harris Point Detection & ANMS</h2>
+		<p align="middle">Zoom into the images to find where the points are detected.
+			The tiny red points located in each of the image indicate the points
+			detected. The red points are located mostly on the curtains of each image,
+			just for your information.</p>
+		<img src="proj4a-images/anms1.png" align="middle"
+			width="800px" />
+		<img src="proj4a-images/anms2.png" align="middle"
+			width="800px" />
+		<h2 align="middle">Feature Descriptor Extraction</h2>
+		<img src="proj4a-images/feature1.png" align="middle"
+			width="800px" />
+		<img src="proj4a-images/feature2.png" align="middle"
+			width="800px" />
+		<h2 align="middle">Feature Matching</h2>
+		<p align="middle">The red lines indicate the points that are being matched
+			among the two images. </p>
+		<img src="proj4a-images/featurematcheswithoutransac.png" align="middle"
+			width="800px" />
+		<h2 align="middle">RANSAC</h2>
+		<p align="middle">Using RANSAC, I was able to match more features between the
+			two images.</p>
+		<img src="proj4a-images/ransac1.png" align="middle"
+			width="800px" />
+		<h2 align="middle">Automatic Stiching Images into a Mosaic</h2>
+		<p align="middle">The following are the results of automatically stitching the
+			images using the method from the paper. </p>
+		<img src="proj4a-images/automatic1.png" align="middle"
+			width="800px" />
+		<img src="proj4a-images/automatic2.png" align="middle"
+			width="800px" />
+		<img src="proj4a-images/automatic3.png" align="middle"
+			width="800px" />
+		</div>
 	</body>
 </html>
