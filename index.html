@@ -18,7 +18,7 @@
 				transform: rotate(90deg);
 			}
 		</style>
-		<title>CS 180 Project 4</title>
+		<title>CS 180 Final Project</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<link
 			href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro"
@@ -28,7 +28,7 @@
 	<body>
 
 		<h1 align="middle">CS 180 Fall 2024</h1>
-		<h1 align="middle">Project 4: Image Warping and Mosaicing</h1>
+		<h1 align="middle">Final Project</h1>
 		<h2 align="middle">Eugene Han</h2>
 		<h2 align="middle">SID: 3036560489</h2>
 
@@ -36,156 +36,60 @@
 
 		<div>
 
-			<h1 align="middle">Overview</h1>
-			<p align="middle">This project involves stiching images into a mosaic, both
-				manually and automatically. I was able to capture my own source photographs,
-				define correspondences between them, then warp and composite them for the
-				manual approach. For the automatic approach, I detected corner features,
-				extracted a feature descriptor for each point, matched those descriptors,
-				and used a robust method RANSAC to compute the homography.</p>
-
-			<h1 align="middle">Manual Approach (Part A)</h1>
-			<h2 align="middle">Shoot the Pictures</h2>
-			<p align="middle">I was able to capture pictures of the living room, bedroom,
-				and a cafe for image warping and mosaicing. Two images are taken for each
-				scene, with both images having significant overlaps for better outputs.</p>
+			<h1 align="middle">Augmented Reality</h1>
+			<h2 align="middle">Overview</h1>
+			<p align="middle">In this project, I implemented an augmented reality (AR) system that creates a "poor man's" version of AR using computer vision techniques. 
+				The program takes a video input where the user is prompted to set four corner points on a flat surface, and then the program tracks these points throughout the video using optical flow. 
+				Using these tracked 2D points and their corresponding 3D coordinates, the program calculates the camera's position and orientation for each frame using solvePnP. 
+				This allows the program to project a 3D cube onto the video, making it appear as if the object is anchored to the real-world surface. 
+				The system adjusts the cube's perspective based on camera movement, creating an illusion that the object exists in the real world. </p>
 			<table>
 				<tr>
 					<td>
-						<img src="proj4a-images/image1.jpg" align="middle"
+						<img src="input.gif" align="middle"
 							width="400px" />
 					</td>
 					<td>
-						<img src="proj4a-images/image2.jpg" align="middle" width="400px" />
-					</td>
-				</tr>
-				<br>
-				<tr>
-					<td>
-						<img src="proj4a-images/image6.jpg" align="middle"
-							width="400px" />
-					</td>
-					<td>
-						<img src="proj4a-images/image7.jpg" align="middle" width="400px" />
-					</td>
-				</tr>
-				<br>
-				<tr>
-					<td>
-						<img src="proj4a-images/image8.jpg" align="middle"
-							width="400px" />
-					</td>
-					<td>
-						<img src="proj4a-images/image9.jpg" align="middle" width="400px" />
+						<img src="output.gif" align="middle" width="400px" />
 					</td>
 				</tr>
 			</table>
-			<p align="middle">I also took pictures for rectification. One is from my
-				bedroom, and the other one is from the cafe.</p>
-			<tr>
-				<td>
-					<img src="proj4a-images/image3.jpg" align="middle"
-						width="400px" />
-				</td>
-				<td>
-					<img src="proj4a-images/image4.jpg" align="middle" width="400px" />
-				</td>
-			</tr>
-			<h2 align="middle">Recover Homographies</h2>
-			<p align="middle">The correspondence points are chosen using the tool
-				provided from project 3. The points are defined based on objects that the
-				two images share in common. Using the correspondence points, I recovered the
-				homographies by using the following implementation.</p>
-			<img src="proj4a-images/computeH.png" align="middle"
-				width="400px" />
-			<h2 align="middle">Warp the Images</h2>
-			<p align="middle">I was able to warp the images for living room and cafe.</p>
-			<tr>
-				<td>
-					<img src="proj4a-images/final_livingroom.png" align="middle"
-						width="800px" />
-				</td>
-				<td>
-					<img src="proj4a-images/final_cafe.png" align="middle" width="800px" />
-				</td>
-			</tr>
-			<p align="middle">I was also able to rectify some rectangular objects from
-				the two scenes: one laptop and one painting. This was done by selecting the
-				four corners of the rectangular objects as the corresopndence points using
-				the user interface.</p>
-			<tr>
-				<td>
-					<img src="proj4a-images/image3.jpg" align="middle"
-						width="400px" />
+			
+			<h1 align="middle">Tour Into The Picture</h1>
+			<h2 align="middle">Overview</h1>
+			<p align="middle">In this project, I implemented "Tour Into the Picture" (TIP), a technique to create different views from a single 2D image. The program prompts the user to specify a vanishing point and an inner rectangle on an image using a spidery mesh interface. 
+				Then, the program generates a simple 3D scene by creating five planes (floor, ceiling, back wall, and side walls) and mapping appropriate textures from the original image onto these planes. 
+				Using camera controls, the program randomly generates different viewpoints from different camera angles as if it were a real 3D environment. 
+				The technique doesn't create a fully accurate 3D model, but instead creates a convincing visual effect that gives the impression of moving through the 2D image in three dimensions.</p>
+			<table>
+				<tr>
+					<td>
+						<img src="1.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="1-2.png" align="middle" width="400px" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="2.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="2-1.png" align="middle" width="400px" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="3.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="3-1.png" align="middle" width="400px" />
+					</td>
+				</tr>
+			</table>
 
-				</td>
-				<td>
-					<img src="proj4a-images/image4.jpg" align="middle" width="400px" />
-				</td>
-			</tr>
-			<figcaption align="middle">original image for reference</figcaption>
-			<tr>
-				<td>
-					<img src="proj4a-images/rect_laptop.png" align="middle"
-						width="400px" />
-				</td>
-				<td>
-					<img src="proj4a-images/rect_painting.png" align="middle" width="400px" />
-				</td>
-			</tr>
-			<h2 align="middle">Blend Images into a Mosaic</h2>
-			<p align="middle">To further improve mosaicing, I can use a blending
-				technique to further smoothen out the warping process. I used weight
-				averaging to get rid of the noticeable artifacts, and I also incorporated
-				Laplacian pyramid to make sure the two images are blended smoothly.</p>
-			<tr>
-				<td>
-					<img src="proj4a-images/final_blend_bedroom.png" align="middle"
-						width="800px" />
-				</td>
-				<td>
-					<img src="proj4a-images/final_blend_cafe.png" align="middle"
-						width="800px" />
-				</td>
-				<td></td>
-				<img src="proj4a-images/final_blend_livingroom.png" align="middle"
-					width="800px" />
-			</td>
-		</tr>
-		<h1 align="middle">Automatic Approach (Part B)</h1>
-		<h2 align="middle">Harris Point Detection & ANMS</h2>
-		<p align="middle">Zoom into the images to find where the points are detected.
-			The tiny red points located in each of the image indicate the points
-			detected. The red points are located mostly on the curtains of each image,
-			just for your information.</p>
-		<img src="proj4a-images/anms1.png" align="middle"
-			width="800px" />
-		<img src="proj4a-images/anms2.png" align="middle"
-			width="800px" />
-		<h2 align="middle">Feature Descriptor Extraction</h2>
-		<img src="proj4a-images/feature1.png" align="middle"
-			width="800px" />
-		<img src="proj4a-images/feature2.png" align="middle"
-			width="800px" />
-		<h2 align="middle">Feature Matching</h2>
-		<p align="middle">The red lines indicate the points that are being matched
-			among the two images. </p>
-		<img src="proj4a-images/featurematcheswithoutransac.png" align="middle"
-			width="800px" />
-		<h2 align="middle">RANSAC</h2>
-		<p align="middle">Using RANSAC, I was able to match more features between the
-			two images.</p>
-		<img src="proj4a-images/ransac1.png" align="middle"
-			width="800px" />
-		<h2 align="middle">Automatic Stiching Images into a Mosaic</h2>
-		<p align="middle">The following are the results of automatically stitching the
-			images using the method from the paper. </p>
-		<img src="proj4a-images/automatic1.png" align="middle"
-			width="800px" />
-		<img src="proj4a-images/automatic2.png" align="middle"
-			width="800px" />
-		<img src="proj4a-images/automatic3.png" align="middle"
-			width="800px" />
-		</div>
 	</body>
 </html>
