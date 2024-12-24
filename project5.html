@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<style>
+			body {
+				padding: 100px;
+				width: 1000px;
+				margin: auto;
+				text-align: left;
+				font-weight: 300;
+				font-family: 'Open Sans', sans-serif;
+				color: #121212;
+			}
+			h1, h2, h3, h4 {
+				font-family: 'Source Sans Pro', sans-serif;
+			}
+			.rotate {
+				transform: rotate(90deg);
+			}
+		</style>
+		<title>CS 180 Final Project</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro"
+			rel="stylesheet">
+	</head>
+
+	<body>
+
+		<h1 align="middle">CS 180 Fall 2024</h1>
+		<h1 align="middle">Final Project</h1>
+		<h2 align="middle">Eugene Han</h2>
+		<h2 align="middle">SID: 3036560489</h2>
+
+		<br><br>
+
+		<div>
+
+			<h1 align="middle">Augmented Reality</h1>
+			<h2 align="middle">Overview</h1>
+			<p align="middle">In this project, I implemented an augmented reality (AR) system that creates a "poor man's" version of AR using computer vision techniques. 
+				The program takes a video input where the user is prompted to set four corner points on a flat surface, and then the program tracks these points throughout the video using optical flow. 
+				Using these tracked 2D points and their corresponding 3D coordinates, the program calculates the camera's position and orientation for each frame using solvePnP. 
+				This allows the program to project a 3D cube onto the video, making it appear as if the object is anchored to the real-world surface. 
+				The system adjusts the cube's perspective based on camera movement, creating an illusion that the object exists in the real world. </p>
+			<table>
+				<tr>
+					<td>
+						<img src="input.gif" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="output.gif" align="middle" width="400px" />
+					</td>
+				</tr>
+			</table>
+			
+			<h1 align="middle">Tour Into The Picture</h1>
+			<h2 align="middle">Overview</h1>
+			<p align="middle">In this project, I implemented "Tour Into the Picture" (TIP), a technique to create different views from a single 2D image. The program prompts the user to specify a vanishing point and an inner rectangle on an image using a spidery mesh interface. 
+				Then, the program generates a simple 3D scene by creating five planes (floor, ceiling, back wall, and side walls) and mapping appropriate textures from the original image onto these planes. 
+				Using camera controls, the program randomly generates different viewpoints from different camera angles as if it were a real 3D environment. 
+				The technique doesn't create a fully accurate 3D model, but instead creates a convincing visual effect that gives the impression of moving through the 2D image in three dimensions.</p>
+			<table>
+				<tr>
+					<td>
+						<img src="1.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="1-2.png" align="middle" width="400px" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="2.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="2-1.png" align="middle" width="400px" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img src="3.png" align="middle"
+							width="400px" />
+					</td>
+					<td>
+						<img src="3-1.png" align="middle" width="400px" />
+					</td>
+				</tr>
+			</table>
+
+	</body>
+</html>
